@@ -1,6 +1,9 @@
 import Head from "next/head";
+import { Tabla } from "../function/tablas";
 
 export default function Home() {
+  const result = Tabla(2, 20);
+
   return (
     <div>
       <Head>
@@ -9,7 +12,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>Hola Mundo</main>
+      <main>
+        Hola Mundo
+        {result.map((item, index) => (
+          <div key={index}>
+            <p>
+              {item.numero} x {item.multiplicador} = {item.resultado}
+            </p>
+          </div>
+        ))}
+      </main>
 
       <footer>
         <p>creado por José Valdés</p>
