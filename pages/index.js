@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Logo from "../public/logo.png";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -14,9 +15,18 @@ export default function Home() {
       <main className="container">
         <h1 className="display-1 text-center">¡Bienvenido!</h1>
         <div className="row row-cols-2 text-center align-items-center">
-          <i className="bi bi-plus-square" style={{ fontSize: "150px" }}></i>
-          <i className="bi bi-x-square" style={{ fontSize: "150px" }}></i>
-          <i className="bi bi-dash-square" style={{ fontSize: "150px" }}></i>
+          <i
+            className="bi bi-plus-square text-primary-emphasis"
+            style={{ fontSize: "150px" }}
+          ></i>
+          <i
+            className="bi bi-x-square text-danger-emphasis"
+            style={{ fontSize: "150px" }}
+          ></i>
+          <i
+            className="bi bi-dash-square text-success-emphasis"
+            style={{ fontSize: "150px" }}
+          ></i>
           <Image
             src={Logo}
             alt="Logo de la aplicacion"
@@ -24,9 +34,11 @@ export default function Home() {
             height={160}
           />
         </div>
-        <div className="d-grid gap-2 col mx-auto">
-          <button className="btn btn-primary btn-lg">Comenzar</button>
-        </div>
+        <Link href="/menu">
+          <div className="d-grid gap-2 col mx-auto">
+            <button className="btn btn-primary btn-lg">Comenzar</button>
+          </div>
+        </Link>
       </main>
 
       <footer className="fixed-bottom bg-dark">
