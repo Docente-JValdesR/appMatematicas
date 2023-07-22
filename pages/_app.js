@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import "../styles/globals.css";
 import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }) {
