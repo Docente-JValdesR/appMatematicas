@@ -1,0 +1,15 @@
+html,
+body {
+  background: rgb(238, 174, 202);
+  background: linear-gradient(
+    186deg,
+    rgba(238, 174, 202, 1) 0%,
+    rgba(162, 184, 210, 1) 100%
+  );
+  color: white !important;
+  height: max-content;
+}
+
+* {
+  box-sizing: border-box;
+}
