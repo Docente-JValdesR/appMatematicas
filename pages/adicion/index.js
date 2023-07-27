@@ -15,7 +15,7 @@ export default function index() {
               Ir a la explicación
             </button>
           </Link>
-          <Link href="adicion/actividad">
+          <Link href="adicion/ejercicios">
             <button className="btn btn-primary btn-lg">
               Comenzar con la actividad
             </button>

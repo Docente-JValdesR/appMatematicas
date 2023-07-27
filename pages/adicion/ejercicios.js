@@ -1,41 +1,29 @@
-import React, { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { Sumar } from "../../function/matFunctions";
 export default function Actividad() {
   const [tipodeNumero, setTipodeNumero] = useState("");
   const [cifras, setCifras] = useState(0);
   const [sumandos, setSumandos] = useState([]);
-  const [resultado, setResultado] = useState(null);
+  const [resultado, setResultado] = useState(0);
+  const [numerosSeparados, setNumerosSeparados] = useState([]);
+  const [resultadoSeparado, setResultadoSeparado] = useState([]);
 
-  // Función para obtener el máximo común divisor (MCD) entre dos números
-  const mcd = (a, b) => {
-    return b === 0 ? a : mcd(b, a % b);
-  };
-
-  // Función para simplificar una fracción
-  const simplificarFraccion = (numerador, denominador) => {
-    const divisorComun = mcd(numerador, denominador);
-    return [numerador / divisorComun, denominador / divisorComun];
-  };
-
-  // Función para generar dos números aleatorios en un contexto numérico específico
   const generarSumandosAleatorios = (cantidadCifras, contextoNumerico) => {
     const base = Math.pow(10, cantidadCifras - 1);
     let nuevosSumandos = [];
 
     switch (contextoNumerico) {
       case "natural":
-        nuevosSumandos.push([Math.floor(base * Math.random() * 9) + 1, 1]); // Número natural entre 1 y 9 como fracción
-        nuevosSumandos.push([Math.floor(base * Math.random() * 9) + 1, 1]); // Número natural entre 1 y 9 como fracción
+        nuevosSumandos.push([Math.floor(base * Math.random() * 9) + 1]); // Número natural entre 1 y 9 como fracción
+        nuevosSumandos.push([Math.floor(base * Math.random() * 9) + 1]); // Número natural entre 1 y 9 como fracción
         break;
 
       case "entero":
         nuevosSumandos.push([
-          (Math.random() < 0.5 ? -1 : 1) * Math.floor(base * Math.random() * 9),
-          1,
+          Math.random() < 0.5 ? -1 : 1 * Math.floor(base * Math.random() * 9),
         ]); // Valor absoluto entre 1 y 9 como fracción
         nuevosSumandos.push([
-          (Math.random() < 0.5 ? -1 : 1) * Math.floor(base * Math.random() * 9),
-          1,
+          Math.random() < 0.5 ? -1 : 1 * Math.floor(base * Math.random() * 9),
         ]); // Valor absoluto entre 1 y 9 como fracción
         break;
 
@@ -55,28 +43,65 @@ export default function Actividad() {
         return "Error: El contexto numérico no es válido.";
     }
     setSumandos(nuevosSumandos);
-    setResultado(null); // Reseteamos el resultado al generar nuevos sumandos.
-  };
-
-  // Función para formatear un número en formato vertical
-  const formatearNumeroVertical = (numero) => {
-    if (numero < 0) {
-      // Si es negativo, tomamos el valor absoluto y agregamos el signo "-" al resultado
-      numero = Math.abs(numero);
-      return ["-" + numero.toString().split("").reverse().join("")];
-    } else {
-      return [numero.toString().split("").reverse().join("")];
-    }
-  };
-
-  // Función para mostrar el resultado de la suma
-  const mostrarResultado = () => {
-    const resultadoSuma = sumandos.reduce(
-      (acumulador, sumando) => acumulador + sumando[0],
-      0
+    separarNumerosEnArrays(nuevosSumandos);
+    const nuevoResultado = Sumar(
+      parseInt(nuevosSumandos[0]),
+      parseInt(nuevosSumandos[1])
     );
-    setResultado(resultadoSuma);
+    setResultado(nuevoResultado);
   };
+
+  function separarNumerosEnArrays(arr) {
+    const numerosSeparados = [];
+
+    for (let i = 0; i < arr.length; i++) {
+      // Paso 1: Convierte el número en una cadena
+      const numeroComoCadena = Math.abs(arr[i]).toString();
+
+      // Paso 2: Obtiene la cantidad de dígitos esperada (dependiendo de la cantidad de cifras)
+      const digitosEsperados = cifras > 0 ? cifras : numeroComoCadena.length;
+
+      // Paso 3: Usa el método 'padStart' para llenar con ceros a la izquierda si es necesario
+      const numeroRellenado = numeroComoCadena.padStart(digitosEsperados, "0");
+
+      // Paso 4: Divide la cadena rellenada en caracteres individuales usando el método 'split'
+      const cifrasComoCadena = numeroRellenado.split("");
+
+      // Paso 5 (opcional): Convierte cada carácter en un número usando el método 'map'
+      const cifrasComoNumeros = cifrasComoCadena.map((cifra) =>
+        parseInt(cifra)
+      );
+
+      // Si el número original es negativo, agrega el signo "-" al primer elemento del array
+      if (arr[i] < 0) {
+        cifrasComoNumeros[0] = -cifrasComoNumeros[0];
+      }
+
+      numerosSeparados.push(cifrasComoNumeros);
+    }
+
+    return numerosSeparados;
+  }
+  function separarNumeroEnArray(numero) {
+    const numeroComoCadena = Math.abs(numero).toString();
+    const digitosEsperados = cifras > 0 ? cifras : numeroComoCadena.length;
+    const numeroRellenado = numeroComoCadena.padStart(digitosEsperados, "0");
+    const cifrasComoCadena = numeroRellenado.split("");
+    const cifrasComoNumeros = cifrasComoCadena.map((cifra) => parseInt(cifra));
+    if (numero < 0) {
+      cifrasComoNumeros[0] = -cifrasComoNumeros[0];
+    }
+    return cifrasComoNumeros;
+  }
+
+  useEffect(() => {
+    const resultadoSeparacion = separarNumerosEnArrays(sumandos);
+    setNumerosSeparados(resultadoSeparacion);
+    const separacionDelResultado = separarNumeroEnArray(resultado);
+    setResultadoSeparado(separacionDelResultado);
+  }, [sumandos]);
+  console.log(numerosSeparados);
+  console.log(resultadoSeparado);
 
   return (
     <div className="container vh-100">
@@ -130,37 +155,47 @@ export default function Actividad() {
           </button>
         </div>
       )}
-
-      <div className="row">
-        <button
-          className="btn btn-primary btn-lg"
-          onClick={() => generarSumandosAleatorios(cifras, tipodeNumero)}
-        >
-          Comenzar la Actividad
-        </button>
-      </div>
-
-      <div className="row">
-        {sumandos.map((sumando, index) => (
-          <p key={index}>
-            Sumando {index + 1}: {formatearNumeroVertical(sumando[0])}
-          </p>
-        ))}
-      </div>
-
-      {resultado !== null && (
-        <div className="row">
-          <p>Resultado: {formatearNumeroVertical(resultado)}</p>
+      <button
+        className="btn btn-primary"
+        onClick={() => generarSumandosAleatorios(cifras, tipodeNumero)}
+      >
+        Comenzar con la actividad
+      </button>
+      <div className="row display-4 fw-bold">
+        <div className="col-3 text-end align-self-center">
+          <i className="bi bi-plus-lg" style={{ fontSize: "50px" }}></i>
         </div>
-      )}
-
-      {sumandos.length > 0 && resultado === null && (
-        <div className="row">
-          <button className="btn btn-success btn-lg" onClick={mostrarResultado}>
-            Mostrar Resultado
-          </button>
+        <div className="col-9">
+          <div className="row text-center">
+            {numerosSeparados.length > 0
+              ? numerosSeparados[0].map((numero, index) => (
+                  <div className="col-2 border rounded m-2" key={index}>
+                    {numero}
+                  </div>
+                ))
+              : null}
+          </div>
+          <div className="row text-center">
+            {numerosSeparados.length > 0
+              ? numerosSeparados[1].map((numero, index) => (
+                  <div className="col-2 border rounded m-2" key={index}>
+                    {numero}
+                  </div>
+                ))
+              : null}
+          </div>
+          <hr />
+          <div className="row text-end">
+            {resultadoSeparado
+              ? resultadoSeparado.map((numero, index) => (
+                  <div className="col-2 border rounded m-1" key={index}>
+                    {numero}
+                  </div>
+                ))
+              : null}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
